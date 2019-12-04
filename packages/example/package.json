@@ -4,17 +4,18 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "postinstall": "echo '@packages/example needs: yarn build'",
-    "clean-deps": "rm -rf node_modules",
-    "test": "yarn test-unit",
-    "test-e2e": "cypress run",
-    "test-debug": "yarn test-unit --inspect-brk=5566",
-    "test-unit": "cross-env NODE_ENV=test mocha",
-    "test-watch": "yarn test-unit --watch",
-    "build": "node ./bin/build.js && gulp build",
     "build-prod": "yarn build",
+    "build": "node ./bin/build.js && gulp build",
+    "clean-deps": "rm -rf node_modules",
+    "deploy": "gulp deploy",
+    "postinstall": "echo '@packages/example needs: yarn build'",
     "predeploy": "yarn build",
-    "deploy": "gulp deploy"
+    "test-e2e": "cypress open",
+    "test-e2e:ci": "cypress run",
+    "test-integration": "exit 0",
+    "test-integration:ci": "exit 0",
+    "test-unit:ci": "cross-env NODE_ENV=test mocha",
+    "test-unit": "yarn test-unit:ci --watch --inspect"
   },
   "files": [
     "cypress",
