@@ -22,14 +22,28 @@ _Released 07/01/2025 (PENDING)_
 
 - Migration helpers and related errors are no longer shown when upgrading from Cypress versions earlier than 10.0.0. To migrate from a pre-10.0.0 version, upgrade one major version at a time to receive the appropriate guidance. Addresses [#31345](https://github.com/cypress-io/cypress/issues/31345). Addressed in [https://github.com/cypress-io/cypress/pull/31629/](https://github.com/cypress-io/cypress/pull/31629/).
 
-## 14.3.4
+## 14.4.0
 
 _Released 5/20/2025 (PENDING)_
+
+**Features:**
+
+- `@cypress/webpack-dev-server` and `@cypress/webpack-batteries-included-preprocessor` now ship with [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer) as a diagnostic tool to determine bundle statistics, which can be enabled via `DEBUG=cypress-verbose:webpack-dev-server:bundle-analyzer` ( component tests using webpack) or `DEBUG=cypress-verbose:webpack-batteries-included-preprocessor:bundle-analyzer` (e2e tests using webpack, which is the default preprocessor), respectively. Addresses [#30461](https://github.com/cypress-io/cypress/issues/30461).
+
+**Bugfixes:**
+
+- Fixed an issue where framebusting was occurring when `top.window.location` was being set explicitly. This fix does not require the `experimentalModifyObstructiveThirdPartyCode` configuration option. Addresses [#31687](https://github.com/cypress-io/cypress/issues/31687).
+- `cy.press()` now has a return type of `Chainable<null>` instead of `void` to match the convention of other commands that yield `null`. Addressed in [#31698](https://github.com/cypress-io/cypress/pull/31698).
+- Fixed an issue with the experimental usage of WebKit where Cypress incorrectly displayed `0` as the WebKit version. Addresses [#31684](https://github.com/cypress-io/cypress/issues/31684).
+
+**Misc:**
+
+- Cursor is now available as an IDE option for opening files in Cypress, if it is installed on your system. Addressed in [#31691](https://github.com/cypress-io/cypress/pull/31691).
+- The error shown when the `--record` flag is missing has been updated to be shorter. Addressed in [#31676](https://github.com/cypress-io/cypress/pull/31676).
 
 **Dependency Updates:**
 
 - Upgraded `trash` from `5.2.0` to `7.2.0`. Addressed in [#31667](https://github.com/cypress-io/cypress/pull/31667).
-
 
 ## 14.3.3
 
