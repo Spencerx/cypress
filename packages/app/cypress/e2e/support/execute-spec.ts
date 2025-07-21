@@ -1,9 +1,9 @@
 import { shouldHaveTestResults } from '../runner/support/spec-loader'
 
 export interface ExpectedResults {
-  passCount?: number
-  failCount?: number
-  pendingCount?: number
+  passCount?: number | string
+  failCount?: number | string
+  pendingCount?: number | string
 }
 
 declare global {
@@ -12,25 +12,20 @@ declare global {
       /**
        * Adapter to wait for a spec to finish in a standard way. It
        *
-       * 1. Waits for the stats to reset which signifies that the test page has loaded
-       * 2. Waits for 'Your tests are loading...' to not be present so that we know the tests themselves have loaded
-       * 3. Waits (with a timeout of 30s) for the Rerun all tests button to be present. This ensures all tests have completed
+       * 1. Waits for 'Your tests are loading...' to not be present so that we know the tests themselves have loaded
+       * 2. Waits for the Rerun all tests button to be present. This ensures all tests have completed
        *
+       * @param expectedResults - The expected results of the spec
+       * @param timeout - The timeout for the spec to finish
        */
-      waitForSpecToFinish(expectedResults?: ExpectedResults, timeout?: number, checkStats?: boolean): void
+      waitForSpecToFinish(expectedResults?: ExpectedResults, timeout?: number): void
       verifyE2ESelected(): void
       verifyCtSelected(): void
     }
   }
 }
 
-export const waitForSpecToFinish = (expectedResults, timeout?: number, checkStats: boolean = true) => {
-  // when we're in studio single test mode, we don't have the stats so we can skip this
-  if (checkStats) {
-    cy.get('.passed > .num').should('exist')
-    cy.get('.failed > .num').should('exist')
-  }
-
+export const waitForSpecToFinish = (expectedResults?: ExpectedResults, timeout?: number) => {
   // Then ensure the tests are not running
   cy.contains('Your tests are loading...', { timeout: timeout || 30000 }).should('not.exist')
 

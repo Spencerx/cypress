@@ -17,7 +17,7 @@ export function loadProjectAndRunSpec ({ projectName = 'experimental-studio' as 
 export function launchStudio ({ specName = 'spec.cy.js', createNewTest = false, cliArgs = [''] } = {}) {
   loadProjectAndRunSpec({ specName, cliArgs })
 
-  const testTitle = createNewTest ? 'New Test' : 'visits a basic html page'
+  const testTitle = 'visits a basic html page'
 
   if (createNewTest) {
     cy.contains('studio functionality').as('item')
@@ -27,7 +27,6 @@ export function launchStudio ({ specName = 'spec.cy.js', createNewTest = false, 
 
   cy.get('@item')
   .closest('.runnable-wrapper').as('runnable-wrapper')
-  .realHover()
 
   if (createNewTest) {
     cy.get('@runnable-wrapper').realHover().findByTestId('create-new-test-button').click()
@@ -42,6 +41,9 @@ export function launchStudio ({ specName = 'spec.cy.js', createNewTest = false, 
     cy.waitForSpecToFinish()
 
     cy.get('[data-cy="studio-single-test-title"]').contains(testTitle)
+
+    // verify recording is enabled to ensure the panel is fully ready
+    cy.findByTestId('record-button-recording').should('have.text', 'Recording...')
   }
 }
 
