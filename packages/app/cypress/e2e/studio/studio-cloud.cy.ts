@@ -11,6 +11,42 @@ describe('Studio Cloud', () => {
     })
   })
 
+  it('allows .only tests to be edited in studio', () => {
+    loadProjectAndRunSpec({ specName: 'spec-with-only.cy.js' })
+
+    // verify the test is the only one that runs
+    cy.get('.test').should('have.length', 1)
+    cy.get('.test').contains('should be the only test to run normally').should('be.visible')
+
+    // open edit in studio
+    cy.contains('should be the only test to run normally')
+    .closest('.runnable-wrapper')
+    .findByTestId('launch-studio')
+    .click()
+
+    cy.findByTestId('studio-panel').should('be.visible')
+
+    cy.findByTestId('studio-single-test-title').should('have.text', 'should be the only test to run normally')
+  })
+
+  it('creates and runs new tests in studio mode when there is a .only test in the spec file', () => {
+    loadProjectAndRunSpec({ specName: 'spec-with-only.cy.js' })
+
+    cy.get('.test').should('have.length', 1)
+    cy.get('.test').contains('should be the only test to run normally').should('be.visible')
+
+    // launch studio and create a new test
+    cy.findByTestId('studio-button').click()
+    cy.findByTestId('studio-panel').should('be.visible').within(() => {
+      cy.contains('button', 'New test').click()
+      cy.get('[data-cy="test-name-input"]').type('new test{enter}')
+    })
+
+    cy.get('.spec-name').should('have.text', 'spec-with-only')
+    // our new test runs in studio mode even though it doesn't have a .only
+    cy.get('[data-cy="studio-single-test-title"]').should('have.text', 'new test')
+  })
+
   it('immediately loads the studio panel from existing test', () => {
     const deferred = pDefer()
 

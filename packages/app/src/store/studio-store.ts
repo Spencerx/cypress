@@ -109,6 +109,7 @@ interface StudioRecorderState {
   showUrlPrompt: boolean
   cloudStudioRequested: boolean
   cloudStudioSessionId?: string
+  _isStudioCreatedTest: boolean
   newTestLineNumber?: number
 }
 
@@ -128,6 +129,8 @@ export const useStudioStore = defineStore('studioRecorder', {
       showUrlPrompt: true,
       cloudStudioRequested: false,
       cloudStudioSessionId: undefined,
+      newTestLineNumber: undefined,
+      _isStudioCreatedTest: false,
     }
   },
 
@@ -232,15 +235,21 @@ export const useStudioStore = defineStore('studioRecorder', {
     initialize () {
       if (this.newTestLineNumber) {
         getCypress().runner.setNewTestLineNumber(this.newTestLineNumber)
+        // Creating a new test - need to bypass .only filtering
+        getCypress().runner.setIsStudioCreatedTest(true)
+        this._isStudioCreatedTest = true
       } else if (this.testId) {
         getCypress().runner.setOnlyTestId(this.testId)
+        getCypress().runner.setIsStudioCreatedTest(this._isStudioCreatedTest)
       }
     },
 
     interceptTest (test) {
       // if this test is the one we created, we can just set the test id
-      if (this.newTestLineNumber && test.invocationDetails?.line === this.newTestLineNumber) {
+      if ((this.newTestLineNumber && test.invocationDetails?.line === this.newTestLineNumber) || this.suiteId) {
+        this._isStudioCreatedTest = true
         this.setTestId(test.id)
+        getCypress().runner.setIsStudioCreatedTest(true)
       }
 
       if (this.testId) {
@@ -284,6 +293,7 @@ export const useStudioStore = defineStore('studioRecorder', {
       this._currentId = 1
       this.isFailed = false
       this.showUrlPrompt = true
+      this._isStudioCreatedTest = false
 
       this._maybeResetRunnables()
     },
