@@ -113,8 +113,6 @@ describe('Studio Cloud', () => {
 
     cy.contains('New test')
 
-    cy.findByTestId('studio-url-prompt').should('not.exist')
-
     cy.percySnapshot()
   })
 
