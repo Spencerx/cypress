@@ -5,6 +5,10 @@
 
 - The `cy.end()` command has been deprecated and will be removed in a future release. Instead of using `.end()` to break a chain, start a new chain of commands off of `cy`. Addressed in [#33707](https://github.com/cypress-io/cypress/pull/33707).
 
+**Bugfixes:**
+
+- Fixed an issue where multi-origin tests using [`cy.origin`](https://docs.cypress.io/api/commands/origin) could fail to talk to a secondary origin after test isolation, when the spec-bridge iframe was already present, or when more than one secondary origin became ready around the same time. Cached spec-bridge window targets are now cleared at the correct lifecycle points, improving performance of specs with cy.origin calls. Addressed in [#33704](https://github.com/cypress-io/cypress/pull/33704).
+
 **Misc:**
 
 - Additional CI environment variables are now captured to support a future failed test retry feature. Addressed in [#33714](https://github.com/cypress-io/cypress/pull/33714).
